@@ -1,1 +1,1 @@
-{"name": "Treino INATTER", "short_name": "INATTER", "start_url": ".", "display": "standalone", "background_color": "#eef1f4", "theme_color": "#1f4e8c", "icons": [{"src": "icon.png", "sizes": "512x512", "type": "image/png"}]}
+{"name": "Treino INATTER", "short_name": "INATTER", "start_url": ".", "display": "standalone", "background_color": "#f3f1ec", "theme_color": "#1f2227", "icons": [{"src": "icon.png", "sizes": "512x512", "type": "image/png"}]}
