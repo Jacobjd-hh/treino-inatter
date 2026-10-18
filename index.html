@@ -1,4 +1,28 @@
-<!doctype html><html lang="pt"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#1f2227"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon.png"><link rel="apple-touch-icon" href="icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>Treino INATTER</title>
+<!doctype html><html lang="pt"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1f2227"><link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.png"><link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<script>
+(function () {
+  var CACHE = "treino-inatter-839a8e9680", TOTAL = 434;
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+  }
+  window.updateOffline = async function () {
+    var el = document.getElementById('offline');
+    if (!el || !('caches' in window) || !('serviceWorker' in navigator)) return;
+    try {
+      var c = await caches.open(CACHE);
+      var n = (await c.keys()).length;
+      if (n >= TOTAL) { el.textContent = '✓ Pronto para usar sem internet.'; el.className = 'note offline ready'; }
+      else { el.textContent = 'A preparar o modo offline… ' + Math.round(n / TOTAL * 100) + '% (mantém a internet ligada)'; el.className = 'note offline'; setTimeout(window.updateOffline, 1500); }
+    } catch (e) {}
+  };
+})();
+</script>
+</head><body><title>Treino INATTER</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@600;800;900&family=Source+Sans+3:wght@400;600;700&display=swap">
@@ -149,6 +173,8 @@ button:focus-visible, summary:focus-visible { outline: 3px solid var(--amber); o
 details.group { margin-top: 18px; }
 details.group summary { cursor: pointer; font-family: var(--display); font-weight: 800; font-size: 15px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 6px 0 10px; }
 .note { color: var(--muted); font-size: 14px; }
+.note.offline { margin-top: 18px; font-weight: 700; }
+.note.offline.ready { color: var(--green); }
 .danger { background: none; border: 0; color: var(--muted); text-decoration: underline; font-size: 14px; padding: 4px 0; }
 @media (max-width: 480px) {
   .light-head h1 { font-size: 26px; }
@@ -240,6 +266,7 @@ function home() {
         return `<button class="mode" data-topic="${i}"><i class="dot ${dot}"></i><strong>${esc(t.name)}</strong><span class="s">${t.q.length} perguntas${b == null ? '' : ' · melhor: ' + b + '/' + t.q.length}</span></button>`;
       }).join('')}
     </div>` : ''}
+    <p class="note offline" id="offline"></p>
     <p class="note" style="margin-top:22px">O teu progresso fica guardado neste navegador.
       <button class="danger" id="reset">Apagar progresso</button></p>
   `;
@@ -262,6 +289,7 @@ function home() {
     else { r.dataset.confirm = 1; r.textContent = 'Tens a certeza? Toca outra vez para apagar'; }
   };
   window.scrollTo(0, 0);
+  if (window.updateOffline) window.updateOffline();
 }
 
 // Every session: new question order and new option order for each question.
